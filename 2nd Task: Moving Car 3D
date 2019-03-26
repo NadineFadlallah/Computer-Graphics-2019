@@ -1,0 +1,338 @@
+from OpenGL.GL import *
+from OpenGL.GLUT import *
+from OpenGL.GLU import *
+import pygame
+import numpy as np
+from math import*
+
+def myInit():
+    glMatrixMode(GL_PROJECTION)
+    glLoadIdentity()
+    gluPerspective(60, 1, 1, 30)
+    gluLookAt(8, 9 , 10,
+              0, 0, 0,
+              0, 1, 0)
+
+    #glClearColor(135/255, 206/255, 235/255, 1)
+    glClearColor(25 / 255, 25 / 255, 112 / 255, 1)
+    glClear(GL_COLOR_BUFFER_BIT)
+
+angle = 0
+step=0
+Forward = True
+s=0
+def draw():
+    global angle
+    global step
+    global Forward
+    global s
+
+    glMatrixMode(GL_MODELVIEW) #VI!
+    glLoadIdentity()
+    glClear(GL_COLOR_BUFFER_BIT)
+
+
+    #drawXYZ()
+
+    drawRoad()
+
+    drawRoadLines()
+
+    grass()
+
+    drawTrottoir()
+
+    drawTrees()
+
+    drawMoon()
+
+
+
+
+    glLoadIdentity()
+    glTranslate(step,0,0.5)
+    glColor3f(179/255, 34/255, 34/255)
+    glScale(1, 0.25, 0.5)
+    glutSolidCube(5)
+
+    glLoadIdentity()
+    glColor3f(205 / 255, 92 / 255, 92 / 255)
+    glTranslate(step, 0, 0.5)
+    glTranslate(0,5*0.25,0)
+    glScale(0.5, 0.25, 0.5)
+    glutSolidCube(5)
+
+    glLoadIdentity()
+    glTranslate(step, 0, 0.5)
+    glTranslate(1.2, 5 * 0.25, -0.1)
+    glScale(0.01, 0.2, 0.45)
+    glColor3f(135/255, 206/255, 250/255)
+    glutSolidCube(5)
+
+    glLoadIdentity()
+
+    glTranslate(step, 0, 0.2)
+    glRotate(90, 0, 1, 0)
+    glTranslate(-1.5, 5 * 0.25, -0.1)
+    glScale(0.01, 0.2, 0.45)
+    glColor3f(135/255, 206/255, 250/255)
+    glutSolidCube(5)
+
+    glColor3f(1, 1, 0)
+    glLoadIdentity()
+    glTranslate(step, 0, 0.5)
+    glTranslate(0.5 * 5, -0.5 * 0.25 * 5 + 1.5, -0.5 * 0.5 * 5 + 0.75)
+    glRotate(angle, 0, 0, 0.5)
+    glutWireTorus(0.125, 0.25, 10, 10)
+
+    glColor3f(1, 1, 0)
+    glLoadIdentity()
+    glTranslate(step, 0, 0.5)
+    glTranslate(0.5 * 5, -0.5 * 0.25 * 5 + 1.5, -0.5 * 0.5 * 5 + 2.5)
+    glRotate(angle, 0, 0, 1)
+    glutWireTorus(0.125, 0.25, 10, 10)
+
+    glColor3f(0, 0, 0)
+    glLoadIdentity()
+    glTranslate(step, 0, 0.5)
+    glTranslate(0.5*5, -0.5*0.25*5, -0.5*0.5*5)
+    glRotate(angle, 0, 0, 1)
+    glutWireTorus(0.125, 0.5, 10, 10)
+
+    glLoadIdentity()
+    glTranslate(step, 0, 0.5)
+    glTranslate(0.5 * 5, -0.5*0.25*5, 0.5*0.5*5)
+    glRotate(angle, 0, 0, 1)
+    glutWireTorus(0.125, 0.5, 10, 10)
+
+    glLoadIdentity()
+    glTranslate(step, 0, 0.5)
+    glTranslate(-0.5 * 5, -0.5 * 0.25 * 5, 0.5 * 0.5 * 5)
+    glRotate(angle, 0, 0, 1)
+    glutWireTorus(0.125, 0.5, 10, 10)
+
+
+
+
+
+    if Forward:
+        angle -= 0.3
+        step += 0.01
+        if (step > 6):
+            Forward = False
+    else:
+        angle += 0.3
+        step -= 0.01
+        if (step < -6):
+            Forward = True
+
+    glutSwapBuffers()
+
+
+def drawXYZ():
+
+
+
+    glBegin(GL_LINES)
+    glColor3f(1,0,0)
+    glVertex(0, 0, 0)
+    glVertex(10,0,0)
+
+    glColor3f(0, 1, 0)
+    glVertex(0, 0, 0)
+    glVertex(0, 10, 0)
+
+    glColor3f(0, 0, 1)
+    glVertex(0, 0, 0)
+    glVertex(0, 0, 10)
+
+    glEnd()
+
+def drawRoad():
+
+    glBegin(GL_QUADS)
+    glColor3f(0.5,0.5,0.5)
+    glVertex3f(-25, 0, -3.5)
+    glVertex3f(-25,0,3.5)
+    glVertex3f(25, 0, 3.5)
+    glVertex3f(25, 0, -3.5)
+
+    glEnd()
+def drawRoadLines():
+
+    for x in np.arange(0,30, 5):
+        glLoadIdentity()
+        glTranslate(x,0,0)
+        glBegin(GL_QUADS)
+        glColor3f(1, 1, 0)
+        glVertex3f(-20, 0, 0.5)
+        glVertex3f(-20, 0, -0.5)
+        glVertex3f(-16, 0, -0.5)
+        glVertex3f(-16, 0, 0.5)
+        glEnd()
+
+
+def drawTrottoir():
+
+    for x in np.arange(0, 40, 3):
+        glLoadIdentity()
+        glTranslate(x, 0, 0)
+        glTranslate(-25, 0, -5)
+        glScale(0.75, 0.125, 0.25)
+        glColor3f(x%2,x%2,x%2)
+        glutSolidCube(7)
+
+
+    for y in np.arange(0, 40, 3):
+        glLoadIdentity()
+        glTranslate(y, 0, 0)
+        glTranslate(-20, 0, 4.5)
+        glScale(0.75, 0.125, 0.25)
+        glColor3f(y%2,y%2,y%2)
+        glutSolidCube(6)
+
+def grass():
+    glLoadIdentity()
+    glBegin(GL_QUADS)
+    glColor3f(9 / 255, 148 / 255, 65 / 255)
+    glVertex3f(0, 8, 9)
+    glVertex3f(0, 0, 4.5)
+    glVertex3f(10, 0, 5)
+    glVertex3f(2, 0, 10)
+    glEnd()
+
+    glLoadIdentity()
+    glBegin(GL_QUADS)
+    glColor3f(9 / 255, 148 / 255, 65 / 255)
+    glVertex3f(-9, 4, 2)
+    glVertex3f(0, 5, 0)
+    glVertex3f(7, 5, -4)
+    glVertex3f(8, 4, 2)
+    glEnd()
+
+def drawTrees():
+    for x in np.arange(0, 30, 5):
+        glLoadIdentity()
+        glTranslate(x, 0, 0)
+        glBegin(GL_QUADS)
+        glColor3f(139 / 255, 69 / 255, 19 / 255)
+        glVertex3f(-10, 5, -2.125)
+        glVertex3f(-11, 5, -2.125)
+        glVertex3f(-11, 2.5, -2.125)
+        glVertex3f(-10, 2.5, -2.125)
+        glEnd()
+
+        glLoadIdentity()
+        glTranslate(x,1,0)
+        glBegin(GL_TRIANGLES)
+        glColor3f(50 / 255, 205 / 255, 50 / 255)
+        glVertex3f(-12, 3, -2.25)
+        glVertex3f(-9, 3, -2.25)
+        glVertex3f(-10.5, 5, -2.25)
+        #glVertex3f(-10, 3, -1.25)
+        glEnd()
+
+        glLoadIdentity()
+        glTranslate(x, 1.5, 0)
+        glBegin(GL_TRIANGLES)
+        glColor3f(50 / 255, 205 / 255, 50 / 255)
+        glVertex3f(-12, 3, -2.25)
+        glVertex3f(-9, 3, -2.25)
+        glVertex3f(-10.5, 5, -2.25)
+        # glVertex3f(-10, 3, -1.25)
+        glEnd()
+
+        glLoadIdentity()
+        glTranslate(x, 2.25, 0)
+        glBegin(GL_TRIANGLES)
+        glColor3f(50 / 255, 205 / 255, 50 / 255)
+        glVertex3f(-12, 3, -2.25)
+        glVertex3f(-9, 3, -2.25)
+        glVertex3f(-10.5, 5, -2.25)
+        # glVertex3f(-10, 3, -1.25)
+        glEnd()
+
+def drawMoon():
+    glLoadIdentity()
+    glBegin(GL_POLYGON)
+    glColor3f(205 / 255, 201 / 255, 201 / 255)
+    for theta in np.arange(0,2*pi,0.001):
+
+        x = 1.5 * cos(theta) + (-1)
+        y = 1.5 * sin(theta) + 5
+        glVertex(x, y,-10)
+    glEnd()
+
+    glLoadIdentity()
+    glBegin(GL_POLYGON)
+    glColor3f(139 / 255, 137 / 255, 137 / 255)
+    for theta in np.arange(0, 2 * pi, 0.001):
+        x = 0.25 * cos(theta) + 0.5
+        y = 0.25 * sin(theta) + 6
+        glVertex(x, y, -8)
+    glEnd()
+
+    glLoadIdentity()
+    glBegin(GL_POLYGON)
+    glColor3f(139 / 255, 137 / 255, 137 / 255)
+    for theta in np.arange(0, 2 * pi, 0.001):
+        x = 0.25 * cos(theta) + -0.25
+        y = 0.25 * sin(theta) + 5
+        glVertex(x, y, -8)
+    glEnd()
+
+    glLoadIdentity()
+    glBegin(GL_POLYGON)
+    glColor3f(139 / 255, 137 / 255, 137 / 255)
+    for theta in np.arange(0, 2 * pi, 0.001):
+        x = 0.125 * cos(theta) + 0.75
+        y = 0.125 * sin(theta) + 5
+        glVertex(x, y, -8)
+    glEnd()
+
+    glLoadIdentity()
+    glBegin(GL_POLYGON)
+    glColor3f(139 / 255, 137 / 255, 137 / 255)
+    for theta in np.arange(0, 2 * pi, 0.001):
+        x = 0.125 * cos(theta) + (-1)
+        y = 0.125 * sin(theta) + 6
+        glVertex(x, y, -8)
+    glEnd()
+
+
+    glLoadIdentity()
+    glBegin(GL_POLYGON)
+    glColor3f(1, 1, 1)
+    for theta in np.arange(0, 2 * pi, 0.001):
+        x = 0.1 * cos(theta) + (-2)
+        y = 0.1 * sin(theta) + 6
+        glVertex(x, y, -8)
+    glEnd()
+
+    glLoadIdentity()
+    glBegin(GL_POLYGON)
+    glColor3f(1, 1, 1)
+    for theta in np.arange(0, 2 * pi, 0.001):
+        x = 0.1 * cos(theta) + (0.75)
+        y = 0.1 * sin(theta) + 4
+        glVertex(x, y, -8)
+    glEnd()
+
+    glLoadIdentity()
+    glBegin(GL_POLYGON)
+    glColor3f(1, 1, 1)
+    for theta in np.arange(0, 2 * pi, 0.001):
+        x = 0.1 * cos(theta) + (-1.5)
+        y = 0.1 * sin(theta) + 4
+        glVertex(x, y, -8)
+    glEnd()
+
+
+glutInit()
+glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB)
+glutInitWindowSize(600, 600)
+glutCreateWindow(b"Moving Car")
+glutDisplayFunc(draw)
+myInit()
+glutIdleFunc(draw)
+glutMainLoop()
